@@ -5,8 +5,13 @@ on:
     - cron: "0 */6 * * *" # Runs every 6 hours
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   generate_rss:
+    permissions:
+      contents: write  # for peaceiris/actions-gh-pages to push pages branch
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -15,10 +20,10 @@ jobs:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
 
       - name: Generate RSS feed
         run: |
@@ -27,7 +32,7 @@ jobs:
           VULNCHECK_TOKEN: ${{ secrets.VULNCHECK_TOKEN }}
 
       - name: Deploy RSS feed
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
